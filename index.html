@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday, Reyan!</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --night:#1B1533;
+    --night-2:#241C43;
+    --gold:#F2B705;
+    --coral:#FF6B6B;
+    --mint:#6BCB77;
+    --paper:#FFF8ED;
+    --paper-dim:#F3E8D0;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--night);
+    color:var(--paper);
+    font-family:'Poppins', sans-serif;
+    overflow-x:hidden;
+  }
+  h1,h2,h3,.display{font-family:'Baloo 2', sans-serif;}
+
+  /* ---------- confetti canvas ---------- */
+  #confetti-canvas{
+    position:fixed; inset:0; pointer-events:none; z-index:5;
+  }
+
+  /* ---------- hero ---------- */
+  .hero{
+    min-height:100vh;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center;
+    position:relative;
+    padding:2rem;
+    background:
+      radial-gradient(circle at 20% 20%, rgba(255,107,107,0.25), transparent 40%),
+      radial-gradient(circle at 80% 30%, rgba(107,203,119,0.2), transparent 45%),
+      radial-gradient(circle at 50% 90%, rgba(242,183,5,0.2), transparent 40%),
+      var(--night);
+  }
+  .balloon{
+    position:absolute;
+    width:60px; height:76px;
+    border-radius:50% 50% 50% 50% / 60% 60% 40% 40%;
+    opacity:0.9;
+    animation:float 6s ease-in-out infinite;
+  }
+  .balloon::after{
+    content:'';
+    position:absolute; bottom:-24px; left:50%;
+    width:2px; height:24px; background:rgba(255,248,237,0.4);
+  }
+  .b1{background:var(--coral); left:8%; top:18%; animation-delay:0s;}
+  .b2{background:var(--gold); left:85%; top:12%; animation-delay:1.2s;}
+  .b3{background:var(--mint); left:15%; top:65%; animation-delay:2.1s;}
+  .b4{background:var(--coral); left:78%; top:60%; animation-delay:0.6s;}
+  @keyframes float{
+    0%,100%{transform:translateY(0) rotate(-3deg);}
+    50%{transform:translateY(-22px) rotate(3deg);}
+  }
+
+  .eyebrow{
+    letter-spacing:0.3em; text-transform:uppercase; font-size:0.75rem;
+    color:var(--gold); margin-bottom:1rem; font-weight:500;
+  }
+  .hero h1{
+    font-size:clamp(2.8rem, 8vw, 6rem);
+    font-weight:800;
+    line-height:1;
+    background:linear-gradient(90deg, var(--gold), var(--coral) 60%, var(--mint));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .hero p.sub{
+    margin-top:1.2rem; font-size:1.15rem; color:var(--paper-dim); max-width:36ch;
+  }
+  .scroll-hint{
+    margin-top:3rem; font-size:0.85rem; color:var(--paper-dim); opacity:0.7;
+  }
+
+  /* ---------- hero photo ---------- */
+  .hero-photo{
+    width:170px; height:170px; border-radius:50%;
+    background:linear-gradient(135deg, var(--coral), var(--gold));
+    display:flex; align-items:center; justify-content:center;
+    font-size:3.6rem; margin-bottom:1.6rem;
+    border:4px solid var(--paper);
+    box-shadow:0 14px 34px rgba(0,0,0,0.45);
+  }
+
+  /* ---------- countdown ---------- */
+  .countdown{
+    display:flex; gap:0.9rem; margin-top:2.4rem; flex-wrap:wrap; justify-content:center;
+  }
+  .countdown .unit{
+    background:rgba(255,248,237,0.07);
+    border:1px solid rgba(242,183,5,0.3);
+    border-radius:12px;
+    padding:0.9rem 1.1rem;
+    min-width:76px;
+  }
+  .countdown .unit .val{
+    font-family:'Baloo 2', sans-serif; font-size:1.9rem; color:var(--gold); display:block;
+  }
+  .countdown .unit .lbl{
+    font-size:0.65rem; text-transform:uppercase; letter-spacing:0.14em; color:var(--paper-dim); margin-top:0.3rem; display:block;
+  }
+  .countdown-live-msg{
+    margin-top:2.4rem; font-family:'Baloo 2', sans-serif; font-size:1.4rem; color:var(--mint);
+  }
+
+  /* ---------- music toggle ---------- */
+  .music-toggle{
+    position:fixed; top:1.1rem; right:1.1rem; z-index:20;
+    background:var(--night-2); border:1px solid rgba(242,183,5,0.4);
+    color:var(--paper); border-radius:999px; padding:0.55rem 1rem;
+    font-family:'Poppins', sans-serif; font-size:0.78rem; cursor:pointer;
+    display:flex; align-items:center; gap:0.5rem;
+    transition:background 0.2s ease, transform 0.2s ease;
+  }
+  .music-toggle:hover{background:var(--night); transform:translateY(-1px);}
+  .music-toggle .icon{font-size:1rem;}
+
+  /* ---------- timeline ---------- */
+  .timeline{position:relative; margin-top:1rem; padding-left:2.2rem;}
+  .timeline::before{
+    content:''; position:absolute; left:6px; top:4px; bottom:4px; width:2px;
+    background:linear-gradient(var(--coral), var(--gold), var(--mint));
+  }
+  .timeline-item{position:relative; padding-bottom:2.4rem;}
+  .timeline-item:last-child{padding-bottom:0;}
+  .timeline-item::before{
+    content:''; position:absolute; left:-2.2rem; top:4px;
+    width:14px; height:14px; border-radius:50%;
+    background:var(--gold); border:3px solid var(--night);
+  }
+  .timeline-item .date{
+    font-size:0.72rem; text-transform:uppercase; letter-spacing:0.12em;
+    color:var(--coral); font-weight:600;
+  }
+  .timeline-item h3{font-size:1.1rem; margin-top:0.35rem;}
+  .timeline-item p{color:var(--paper-dim); font-size:0.9rem; margin-top:0.35rem; line-height:1.5;}
+
+  section{padding:5rem 1.5rem; max-width:1100px; margin:0 auto;}
+  .section-head{text-align:center; margin-bottom:3rem;}
+  .section-head .eyebrow{color:var(--mint);}
+  .section-head h2{font-size:clamp(1.8rem,4vw,2.6rem);}
+
+  /* ---------- memories (polaroid scrapbook) ---------- */
+  .gallery{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));
+    gap:2.2rem;
+  }
+  .polaroid{
+    background:var(--paper);
+    padding:0.7rem 0.7rem 2.2rem;
+    border-radius:3px;
+    box-shadow:0 12px 24px rgba(0,0,0,0.35);
+    transform:rotate(var(--r, -3deg));
+    transition:transform 0.25s ease;
+    cursor:default;
+  }
+  .polaroid:nth-child(2n){--r:2deg;}
+  .polaroid:nth-child(3n){--r:-1.5deg;}
+  .polaroid:hover{transform:rotate(0deg) scale(1.04);}
+  .polaroid .img{
+    aspect-ratio:1/1;
+    border-radius:2px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:2.2rem;
+  }
+  .polaroid:nth-child(4n+1) .img{background:linear-gradient(135deg,#FFD8A8,#FF6B6B);}
+  .polaroid:nth-child(4n+2) .img{background:linear-gradient(135deg,#A8E6CF,#6BCB77);}
+  .polaroid:nth-child(4n+3) .img{background:linear-gradient(135deg,#FFEAA7,#F2B705);}
+  .polaroid:nth-child(4n+4) .img{background:linear-gradient(135deg,#D8B4FE,#8E7CC3);}
+  .polaroid .caption{
+    color:var(--night); font-size:0.85rem; text-align:center; margin-top:0.7rem;
+    font-weight:500;
+  }
+
+  /* ---------- quotes wall ---------- */
+  .quotes{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));
+    gap:1.5rem;
+  }
+  .note{
+    background:var(--night-2);
+    border:1px solid rgba(242,183,5,0.25);
+    border-radius:10px;
+    padding:1.6rem;
+    position:relative;
+  }
+  .note::before{
+    content:'"';
+    font-family:'Baloo 2', sans-serif;
+    font-size:3rem; color:var(--gold); opacity:0.5;
+    line-height:0.5; display:block; margin-bottom:0.6rem;
+  }
+  .note p.quote{font-size:0.98rem; color:var(--paper-dim); line-height:1.5;}
+  .note .from{margin-top:1rem; font-size:0.85rem; color:var(--coral); font-weight:600;}
+
+  /* ---------- fun facts ---------- */
+  .facts{
+    display:grid; grid-template-columns:repeat(auto-fit, minmax(220px,1fr)); gap:1.5rem;
+  }
+  .fact{
+    background:linear-gradient(160deg, var(--night-2), var(--night));
+    border-radius:14px; padding:1.6rem;
+    border:1px solid rgba(255,255,255,0.06);
+  }
+  .fact .num{font-family:'Baloo 2',sans-serif; font-size:1.8rem; color:var(--mint);}
+  .fact p{color:var(--paper-dim); font-size:0.9rem; margin-top:0.4rem;}
+
+  /* ---------- guestbook ---------- */
+  .guestbook{
+    background:var(--paper); color:var(--night); border-radius:20px;
+    padding:3rem 2rem; text-align:center;
+  }
+  .guestbook h2{color:var(--night);}
+  .guestbook form{
+    display:flex; flex-direction:column; gap:0.9rem; max-width:420px; margin:2rem auto 0;
+  }
+  .guestbook input, .guestbook textarea{
+    font-family:'Poppins',sans-serif;
+    border:2px solid var(--night); border-radius:8px;
+    padding:0.8rem 1rem; font-size:0.95rem; background:transparent;
+  }
+  .guestbook textarea{resize:vertical; min-height:80px;}
+  .guestbook button{
+    background:var(--coral); color:white; border:none; border-radius:8px;
+    padding:0.9rem; font-weight:600; font-size:1rem; cursor:pointer;
+    transition:transform 0.15s ease, background 0.15s ease;
+  }
+  .guestbook button:hover{background:var(--night); transform:translateY(-2px);}
+  .guestbook-list{margin-top:2rem; text-align:left; display:grid; gap:0.7rem; max-width:420px; margin-inline:auto;}
+  .guestbook-entry{background:var(--paper-dim); border-radius:8px; padding:0.7rem 1rem; font-size:0.9rem;}
+  .guestbook-entry b{color:var(--coral);}
+
+  footer{
+    text-align:center; padding:3rem 1.5rem 4rem; color:var(--paper-dim); font-size:0.85rem;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .balloon{animation:none;}
+  }
+
+  @media (max-width: 480px){
+    .hero-photo{width:130px; height:130px; font-size:2.8rem;}
+    .countdown{gap:0.5rem;}
+    .countdown .unit{min-width:64px; padding:0.7rem 0.6rem;}
+    .countdown .unit .val{font-size:1.5rem;}
+    .music-toggle{
+      top:auto; bottom:1rem; right:1rem; left:1rem;
+      justify-content:center; padding:0.7rem 1rem;
+    }
+    section{padding:3.5rem 1.2rem;}
+  }
+</style>
+</head>
+<body>
+
+<canvas id="confetti-canvas"></canvas>
+
+<button class="music-toggle" id="music-toggle" aria-pressed="false">
+  <span class="icon" id="music-icon">🔇</span>
+  <span>"Best Part" — Daniel Caesar</span>
+</button>
+<audio id="bg-music" loop preload="none">
+  <!-- Add your own licensed audio file or hosted link here, e.g.: -->
+  <!-- <source src="best-part.mp3" type="audio/mpeg"> -->
+</audio>
+
+<section class="hero">
+  <div class="balloon b1"></div>
+  <div class="balloon b2"></div>
+  <div class="balloon b3"></div>
+  <div class="balloon b4"></div>
+  <div class="hero-photo">🥳</div>
+  <p class="eyebrow">Another trip around the sun</p>
+  <h1>Happy Birthday,<br>Reyan!</h1>
+  <p class="sub">A little corner of the internet made by the people who love you — full of memories, messages, and way too many inside jokes.</p>
+
+  <div class="countdown" id="countdown">
+    <div class="unit"><span class="val" id="cd-days">--</span><span class="lbl">Days</span></div>
+    <div class="unit"><span class="val" id="cd-hours">--</span><span class="lbl">Hours</span></div>
+    <div class="unit"><span class="val" id="cd-mins">--</span><span class="lbl">Mins</span></div>
+    <div class="unit"><span class="val" id="cd-secs">--</span><span class="lbl">Secs</span></div>
+  </div>
+  <p class="countdown-live-msg" id="countdown-live-msg" style="display:none;">🎉 It's Reyan's birthday — go wish him! 🎉</p>
+
+  <p class="scroll-hint">↓ scroll down ↓</p>
+</section>
+
+<section id="memories">
+  <div class="section-head">
+    <p class="eyebrow">Scrapbook</p>
+    <h2>Memories with friends</h2>
+  </div>
+  <div class="gallery">
+    <div class="polaroid">
+      <div class="img">🎉</div>
+      <p class="caption">Road trip, summer 2023</p>
+    </div>
+    <div class="polaroid">
+      <div class="img">🏀</div>
+      <p class="caption">3am pickup game</p>
+    </div>
+    <div class="polaroid">
+      <div class="img">🍕</div>
+      <p class="caption">The infamous pizza bet</p>
+    </div>
+    <div class="polaroid">
+      <div class="img">🎮</div>
+      <p class="caption">Undefeated squad</p>
+    </div>
+    <div class="polaroid">
+      <div class="img">🏖️</div>
+      <p class="caption">Beach day chaos</p>
+    </div>
+    <div class="polaroid">
+      <div class="img">🎂</div>
+      <p class="caption">Last year's cake disaster</p>
+    </div>
+  </div>
+</section>
+
+<section id="timeline">
+  <div class="section-head">
+    <p class="eyebrow">The story so far</p>
+    <h2>A timeline of moments</h2>
+  </div>
+  <div class="timeline">
+    <div class="timeline-item">
+      <p class="date">2016</p>
+      <h3>The day we met</h3>
+      <p>Freshman orientation, sat next to each other by accident, and somehow never stopped talking.</p>
+    </div>
+    <div class="timeline-item">
+      <p class="date">2019</p>
+      <h3>The road trip</h3>
+      <p>Six people, one car, zero navigation skills. We still don't know how we made it back.</p>
+    </div>
+    <div class="timeline-item">
+      <p class="date">2022</p>
+      <h3>Moving day chaos</h3>
+      <p>He carried a couch up three flights of stairs by himself out of pure stubbornness. Legendary.</p>
+    </div>
+    <div class="timeline-item">
+      <p class="date">2024</p>
+      <h3>The pizza bet</h3>
+      <p>Lost a bet, had to eat an entire pizza in one sitting. Never speak of the aftermath.</p>
+    </div>
+    <div class="timeline-item">
+      <p class="date">Today</p>
+      <h3>Another year of Reyan</h3>
+      <p>Still the same guy who shows up for everyone. Here's to more memories like these.</p>
+    </div>
+  </div>
+</section>
+
+<section id="quotes">
+  <div class="section-head">
+    <p class="eyebrow">In their words</p>
+    <h2>What your friends had to say</h2>
+  </div>
+  <div class="quotes">
+    <div class="note">
+      <p class="quote">Reyan is the friend who shows up at 2am with no questions asked, then makes fun of you for calling him.</p>
+      <p class="from">— Sam</p>
+    </div>
+    <div class="note">
+      <p class="quote">He's the only person who can make a boring Tuesday feel like an event. Happy birthday to the group chat's main character.</p>
+      <p class="from">— Priya</p>
+    </div>
+    <div class="note">
+      <p class="quote">Ten years of friendship and he still laughs at his own jokes before he finishes telling them. Wouldn't have it any other way.</p>
+      <p class="from">— Marcus</p>
+    </div>
+    <div class="note">
+      <p class="quote">Loyal, hilarious, and terrible at bowling. Love you man, happy birthday!</p>
+      <p class="from">— Dani</p>
+    </div>
+  </div>
+</section>
+
+<section id="facts">
+  <div class="section-head">
+    <p class="eyebrow">Did you know</p>
+    <h2>Fun facts about Reyan</h2>
+  </div>
+  <div class="facts">
+    <div class="fact"><div class="num">04</div><p>Cups of coffee, minimum, before noon</p></div>
+    <div class="fact"><div class="num">∞</div><p>Times he's rewatched his favorite movie</p></div>
+    <div class="fact"><div class="num">17</div><p>Group chats he's currently active in</p></div>
+    <div class="fact"><div class="num">1st</div><p>To arrive, always the last to leave</p></div>
+  </div>
+</section>
+
+<section id="guestbook">
+  <div class="guestbook">
+    <p class="eyebrow" style="color:var(--coral)">Sign the guestbook</p>
+    <h2>Leave Reyan a birthday message</h2>
+    <form id="guestbook-form">
+      <input type="text" id="gb-name" placeholder="Your name" required>
+      <textarea id="gb-message" placeholder="Write your birthday message..." required></textarea>
+      <button type="submit">Add my message</button>
+    </form>
+    <div class="guestbook-list" id="guestbook-list"></div>
+  </div>
+</section>
+
+<footer>
+  Made with 🎈 by his friends — here's to another great year, Reyan.
+</footer>
+
+<script>
+  // ---- confetti burst on load ----
+  const canvas = document.getElementById('confetti-canvas');
+  const ctx = canvas.getContext('2d');
+  function resize(){ canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+  resize();
+  window.addEventListener('resize', resize);
+
+  const colors = ['#F2B705', '#FF6B6B', '#6BCB77', '#FFF8ED'];
+  let particles = [];
+  function burst(count){
+    for(let i=0;i<count;i++){
+      particles.push({
+        x: Math.random()*canvas.width,
+        y: -20 - Math.random()*200,
+        r: 4 + Math.random()*5,
+        c: colors[Math.floor(Math.random()*colors.length)],
+        vy: 2 + Math.random()*3,
+        vx: -1.5 + Math.random()*3,
+        rot: Math.random()*360,
+        vr: -6 + Math.random()*12
+      });
+    }
+  }
+  burst(120);
+
+  let frame = 0;
+  function animate(){
+    ctx.clearRect(0,0,canvas.width, canvas.height);
+    particles.forEach(p=>{
+      p.x += p.vx; p.y += p.vy; p.rot += p.vr;
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot * Math.PI/180);
+      ctx.fillStyle = p.c;
+      ctx.fillRect(-p.r/2, -p.r/2, p.r, p.r*0.6);
+      ctx.restore();
+    });
+    particles = particles.filter(p=>p.y < canvas.height + 30);
+    frame++;
+    if(frame < 400 || particles.length > 0){
+      requestAnimationFrame(animate);
+    } else {
+      ctx.clearRect(0,0,canvas.width, canvas.height);
+    }
+  }
+  animate();
+
+  // ---- countdown to Aug 29 ----
+  function getNextBirthday(){
+    const now = new Date();
+    let year = now.getFullYear();
+    let target = new Date(year, 7, 29, 0, 0, 0); // month is 0-indexed: 7 = August
+    if(target < now){
+      target = new Date(year + 1, 7, 29, 0, 0, 0);
+    }
+    return target;
+  }
+
+  function updateCountdown(){
+    const target = getNextBirthday();
+    const now = new Date();
+    const diff = target - now;
+
+    const countdownEl = document.getElementById('countdown');
+    const liveMsgEl = document.getElementById('countdown-live-msg');
+
+    // treat same calendar day as "today"
+    const isToday = now.getMonth() === 7 && now.getDate() === 29;
+
+    if(isToday){
+      countdownEl.style.display = 'none';
+      liveMsgEl.style.display = 'block';
+      return;
+    }
+
+    countdownEl.style.display = 'flex';
+    liveMsgEl.style.display = 'none';
+
+    const days = Math.floor(diff / (1000*60*60*24));
+    const hours = Math.floor((diff / (1000*60*60)) % 24);
+    const mins = Math.floor((diff / (1000*60)) % 60);
+    const secs = Math.floor((diff / 1000) % 60);
+
+    document.getElementById('cd-days').textContent = days;
+    document.getElementById('cd-hours').textContent = String(hours).padStart(2,'0');
+    document.getElementById('cd-mins').textContent = String(mins).padStart(2,'0');
+    document.getElementById('cd-secs').textContent = String(secs).padStart(2,'0');
+  }
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+
+  // ---- music toggle ----
+  const musicBtn = document.getElementById('music-toggle');
+  const musicIcon = document.getElementById('music-icon');
+  const bgMusic = document.getElementById('bg-music');
+  let isPlaying = false;
+  musicBtn.addEventListener('click', ()=>{
+    if(!bgMusic.querySelector('source')){
+      musicIcon.textContent = '⚠️';
+      musicBtn.querySelector('span:last-child').textContent = 'Add an audio file first';
+      return;
+    }
+    if(isPlaying){
+      bgMusic.pause();
+      musicIcon.textContent = '🔇';
+    } else {
+      bgMusic.play();
+      musicIcon.textContent = '🔊';
+    }
+    isPlaying = !isPlaying;
+    musicBtn.setAttribute('aria-pressed', String(isPlaying));
+  });
+
+  // ---- guestbook (in-memory only) ----
+  const form = document.getElementById('guestbook-form');
+  const list = document.getElementById('guestbook-list');
+  form.addEventListener('submit', e=>{
+    e.preventDefault();
+    const name = document.getElementById('gb-name').value.trim();
+    const msg = document.getElementById('gb-message').value.trim();
+    if(!name || !msg) return;
+    const entry = document.createElement('div');
+    entry.className = 'guestbook-entry';
+    entry.innerHTML = `<b>${name}:</b> ${msg}`;
+    list.prepend(entry);
+    form.reset();
+  });
+</script>
+
+</body>
